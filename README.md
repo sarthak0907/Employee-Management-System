@@ -22,15 +22,11 @@ A simple, secure, and interactive **command-line application** to manage employe
  - `users.json`
  - `employees.json`
 
-3. **Add a default admin user** if not already present:
- ```json
- {
- "id": "admin",
- "password": "hashedpassword",
- "role": "admin"
- }
- ```
- > Note: The password must be hashed using bcrypt if created manually.
+
+3. **By Default Admin User**
+ - by default username- admin
+ - by default password- admin
+
 
 4. **Run the application:**
  ```bash
