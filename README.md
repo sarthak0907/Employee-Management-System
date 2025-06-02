@@ -22,11 +22,12 @@ A simple, secure, and interactive **command-line application** to manage employe
  - `users.json`
  - `employees.json`
 
+3. **Default Admin User** :
 
-3. **By Default Admin User**
- - by default username- admin
- - by default password- admin
+- default username- admin
+- default password- admin
 
+ 
 
 4. **Run the application:**
  ```bash
