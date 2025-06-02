@@ -15,7 +15,7 @@ A simple, secure, and interactive **command-line application** to manage employe
 
 1. **Clone the repository:**
  ```bash
- git clone <repo-url>
+ git clone https://github.com/sarthak0907/Employee-Management-System.git
  ```
 
 2. **Ensure the following files exist inside `employee-management/data/`:**
