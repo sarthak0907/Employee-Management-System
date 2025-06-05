@@ -1,84 +1,134 @@
-# Employee Management System (CLI-Based in Node.js)
+# Employee Management System (Node.js + Express + JWT)
 
-A simple, secure, and interactive **command-line application** to manage employee records using Node.js. The system supports **role-based access** for Admins and Employees, with local **JSON file storage**—no database needed.
-
----
-## Dependencies
-
-- Node.js
-- `bcrypt` — for password hashing (npm install bcrypt)
-- Native `fs` and `readline` modules
-
---- 
-
-## How to Run
-
-1. **Clone the repository:**
- ```bash
- git clone https://github.com/sarthak0907/Employee-Management-System.git
- ```
-
-2. **Ensure the following files exist inside `employee-management/data/`:**
- - `users.json`
- - `employees.json`
-
-3. **Default Admin User** :
-
-- default username- admin
-- default password- admin
-
- 
-
-4. **Run the application:**
- ```bash
- cd employee-management
- node index.js
- ```
-
-5. **Login:**
- - Use `id` and `password` of any user (admin or employee)
+A RESTful **Employee Management System** built using **Node.js**, **Express**, and **JWT authentication**, supporting secure **role-based access** for **Admins** and **Employees**. It uses local **JSON file storage**—no database required.
 
 ---
 
 ## Features
 
-### Common
+### Authentication & Authorization
+- Secure **JWT login** for both Admins and Employees
+- **Role-based access control**:
+ - Admin: Full control (CRUD operations)
+ - Employee: Can view tax & change password
 
-- **Interactive CLI** with `readline`
-- **Secure login** with hashed passwords (`bcrypt`)
-- **Role-based access** (`admin` vs `employee`)
-- **Local JSON-based storage**
-- **Validation**:
- - Prevents alphabetic input for salary
- - Employee ID, name, and department cannot be blank
+###  Admin APIs
+- Add Employee (with tax auto-calculated)
+- Update Employee (department/salary)
+- Delete Employee
+- List all Employees
 
----
-
-### Admin Features
-
-- Login with Admin ID and Password
-- **Add Employee**
- - Auto-generates login credentials (default password ("1234"))
- - Tax is auto-calculated on salary
-- **Update Employee** (Department / Salary)
-- **Delete Employee**
- - Removes from both employee records and users
-- **List All Employees**
+###  Employee APIs
+- View own tax details
+- Change own password
 
 ---
 
-### Employee Features
+##  Tech Stack
 
-- Login with Employee ID and Password
-- **Change Own Password**
-- **View Own Tax**
- - Displays salary and tax in a tabular format
+- Node.js + Express
+- JSON file system for data storage
+- `bcrypt` for password hashing
+- `jsonwebtoken` for secure authentication
+
+---
+
+##  Directory Structure
+
+```
+employee-management/
+├── data/
+│ ├── users.json
+│ └── employees.json
+├── controllers/
+│ └── employeeController.js
+├── middleware/
+│ └── auth.js
+├── routes/
+│ └── employeeRoutes.js
+├── utils.js
+├── employee.js
+├── taxcalculator.js
+└── server.js
+```
+
+---
+
+##  Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone <repo-url>
+cd employee-management
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Prepare data files
+
+Ensure the following files exist in the `/data` directory:
+
+```bash
+data/
+├── users.json
+└── employees.json
+```
+
+
+
+### 4. Start the server
+
+```bash
+node server.js
+```
+
+Server will run on `http://localhost:3000`
+
+---
+
+##  Authentication Flow
+
+1. **Login** (POST `/login`) 
+ → Returns JWT token and role
+ 
+2. **Default Admin User** :
+
+- default username- admin
+- default password- admin
+
+3. **Use token in Authorization header** 
+ Example: 
+ `Authorization: Bearer <your-token>`
+
+---
+
+##  API Endpoints
+
+### Public
+
+- `POST /login` 
+ Login with `id` and `password`
+
+###  Admin (require admin JWT)
+
+- `GET /employees` — List all employees 
+- `POST /employees` — Add new employee 
+- `PUT /employees/:id` — Update employee 
+- `DELETE /employees/:id` — Delete employee 
+
+###  Employee (require employee JWT)
+
+- `GET /my-tax` — View own tax 
+- `POST /change-password` — Change own password
 
 ---
 
 ## Tax Calculation
-
-Tax is automatically calculated based on the following rules:
 
 ```js
 if (salary < 500000) tax = 0;
@@ -86,37 +136,52 @@ else if (salary <= 1000000) tax = salary * 0.1;
 else tax = salary * 0.2;
 ```
 
-Tax is auto-applied during:
+Tax is applied automatically during:
 - Employee creation
-- Salary update
+- Salary updates
 
 ---
 
-## Directory Structure
+##  Security Notes
 
+- All passwords are hashed using **bcrypt**
+- JWT tokens expire in **1 hour**
+- Role-based route protection via middleware
+
+---
+
+##  Sample cURL Requests
+
+Replace `<TOKEN>` with the actual JWT token.
+
+```bash
+# Login
+curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"id":"admin","password":"admin"}'
+
+# Add employee
+curl -X POST http://localhost:3000/employees -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"id":"emp101","name":"Sarthak","department":"CSL","salary":600000}'
+
+# List employees
+curl -X GET http://localhost:3000/employees -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json"
+
+# Update employee
+curl -X PUT http://localhost:3000/employees/emp101 -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"department":"Finance","salary":700000}'
+
+# Delete employee
+curl -X DELETE http://localhost:3000/employees/emp101 -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json"
+
+# View own tax
+curl -X GET http://localhost:3000/my-tax -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json"
+
+# Change password
+curl -X POST http://localhost:3000/change-password -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"newPassword":"new123"}'
 ```
-employee-management/
-├── data/
-│ ├── users.json
-│ └── employees.json
-├── index.js
-├── employee.js
-├── utils.js
-└── taxcalculator.js
-```
 
 ---
 
-## Security
+##  Tips
 
-- Passwords are securely hashed
-- Role-based separation ensures users can only access permitted operations
-
----
-
-## Notes
-
-- Do **not** edit `users.json` or `employees.json` manually unless you know what you're doing.
-- Ensure correct bcrypt hash if setting admin password manually.
+- Avoid editing `users.json` or `employees.json` manually
+- Use tools like Postman or curl for testing
 
 ---

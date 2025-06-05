@@ -1,7 +1,12 @@
- [
-{
- "id": "admin",
- "password": "$2b$10$o6BxtDW9alaXm/14xPJLfeFsPsG4beAB06aV1MdmxlRHi8tszp3Zu",
- "role": "admin"
- }
+[
+  {
+    "id": "admin",
+    "password": "$2b$10$o6BxtDW9alaXm/14xPJLfeFsPsG4beAB06aV1MdmxlRHi8tszp3Zu",
+    "role": "admin"
+  },
+  {
+    "id": "emp102",
+    "password": "$2b$10$TBCCu9sUQFRArizysS5mbe5E9mKOPX.W/Qm2XqZ2ng9mCv0N7elfm",
+    "role": "employee"
+  }
 ]

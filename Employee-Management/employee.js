@@ -44,7 +44,7 @@ function updateEmployee(id, newDept, newSalary) {
  if (newDept) employees[index].department = newDept;
  if (newSalary !== undefined) {
  employees[index].salary = newSalary;
- employees[index].tax = calculateTax(newSalary); // ✅ use calculator
+ employees[index].tax = calculateTax(newSalary); // use calculator
  }
 
  writeJSON(employeeFile, employees);
